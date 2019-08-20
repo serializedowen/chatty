@@ -1,14 +1,21 @@
 import React, { Component } from "react";
 import io from "socket.io-client";
+import CONFIG from "./config";
+import axios from "./config/axios";
 
 export default class Room extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       messages: [],
-      input: ""
+      input: "",
+      typing: false
     };
     this.sendMessage = this.sendMessage.bind(this);
+  }
+
+  setTyping() {
+    this.setState({ typing: true });
   }
 
   sendMessage() {
@@ -17,8 +24,13 @@ export default class Room extends Component {
     this.setState({ input: "" });
   }
 
+  login = () => {
+    console.log(axios);
+    axios.get("/signup").catch(console.log);
+  };
+
   componentDidMount() {
-    this.socket = io("localhost:3000");
+    this.socket = io(`${CONFIG.HOST}:${CONFIG.PORT}`);
     this.socket.on("message", message => {
       console.log(message);
       this.setState(prevState => ({
@@ -26,6 +38,7 @@ export default class Room extends Component {
       }));
       // console.log(message);
     });
+    this.socket.on("disconnect", () => console.log("disconnected"));
   }
 
   componentWillUnmount() {
@@ -44,9 +57,17 @@ export default class Room extends Component {
         <input
           name="input"
           value={this.state.input}
-          onChange={e => this.setState({ [e.target.name]: e.target.value })}
+          onKeyDown={e => {
+            if (13 == e.keyCode) {
+              this.sendMessage();
+            }
+          }}
+          onChange={e => {
+            this.setState({ [e.target.name]: e.target.value });
+          }}
         />
         <button onClick={this.sendMessage}>Send</button>
+        <button onClick={this.login}>Login</button>
       </div>
     );
   }
