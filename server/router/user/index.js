@@ -1,14 +1,12 @@
 const router = require("koa-router")();
-
+const userDB = require("../../db/user");
 module.exports = router;
 
-router.get("/*", (ctx, next) => {
-  next();
-  ctx.response.status = 502;
+router.get("/add", async (ctx, next) => {
+  let res = await userDB.createUser("abc", "123");
+  console.log(res);
+  return next();
 });
-
-router.get("/:userId", (ctx, next) => {});
-
 router.get("/test", (ctx, next) => {
   console.log("user");
   ctx.response.message = "done and done";

@@ -3,6 +3,8 @@ import io from "socket.io-client";
 import CONFIG from "./config";
 import axios from "./config/axios";
 
+import cookie from "./utils/cookie";
+
 export default class Room extends Component {
   constructor(props) {
     super(props);
@@ -26,11 +28,19 @@ export default class Room extends Component {
 
   login = () => {
     console.log(axios);
-    axios.get("/signup").catch(console.log);
+    axios
+      .get("/signup")
+      .then(res => {
+        console.log(res);
+        cookie.setCookie("token", res.data.token);
+      })
+      .catch(console.log);
   };
 
   componentDidMount() {
-    this.socket = io(`${CONFIG.HOST}:${CONFIG.PORT}`);
+    this.socket = io(
+      `${CONFIG.HOST}:${CONFIG.PORT}?token=${cookie.getCookie("token")}`
+    );
     this.socket.on("message", message => {
       console.log(message);
       this.setState(prevState => ({
