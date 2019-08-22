@@ -2,12 +2,35 @@ import React, { Component } from "react";
 import io from "socket.io-client";
 import CONFIG from "./config";
 import axios from "./config/axios";
-
+import Button from "@material-ui/core/Button";
 import cookie from "./utils/cookie";
+import Chip from "@material-ui/core/Chip";
+
+// import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+
+// const styles = makeStyles(theme => ({
+//   container: {
+//     display: "flex",
+//     flexWrap: "wrap"
+//   },
+//   textField: {
+//     marginLeft: theme.spacing(1),
+//     marginRight: theme.spacing(1),
+//     width: 200
+//   },
+//   dense: {
+//     marginTop: 19
+//   },
+//   menu: {
+//     width: 200
+//   }
+// }))();
 
 export default class Room extends Component {
   constructor(props) {
     super(props);
+    // this.styles = useStyles();
     this.state = {
       messages: [],
       input: "",
@@ -21,7 +44,6 @@ export default class Room extends Component {
   }
 
   sendMessage() {
-    console.log(this.socket);
     this.socket.send(this.state.input);
     this.setState({ input: "" });
   }
@@ -58,14 +80,20 @@ export default class Room extends Component {
   render() {
     return (
       <div>
-        <ul>
-          {this.state.messages.map((message, i) => (
-            <li key={i}>{message}</li>
-          ))}
-        </ul>
+        {/* <ul> */}
+        {this.state.messages.map((message, i) => (
+          <Chip clickable label={message} key={i}>
+            {message}
+          </Chip>
+        ))}
+        {/* </ul> */}
 
-        <input
+        <TextField
+          id="standard-name"
+          placeholder="Placeholder"
           name="input"
+          label="With placeholder"
+          // className={styles.textField}
           value={this.state.input}
           onKeyDown={e => {
             if (13 == e.keyCode) {
@@ -75,9 +103,14 @@ export default class Room extends Component {
           onChange={e => {
             this.setState({ [e.target.name]: e.target.value });
           }}
+          margin="normal"
         />
-        <button onClick={this.sendMessage}>Send</button>
-        <button onClick={this.login}>Login</button>
+        <Button variant="contained" color="primary" onClick={this.sendMessage}>
+          发送
+        </Button>
+        <Button variant="contained" color="primary" onClick={this.login}>
+          登陆
+        </Button>
       </div>
     );
   }
