@@ -1,11 +1,13 @@
 const router = require("koa-router")();
 const fs = require("fs");
 const cors = require("./cors");
-
+const errorCatch = require("./error");
 module.exports = router;
 
 // CORS for development
 router.use(cors(["http://localhost:5000", "http://127.0.0.1:5000"]));
+
+router.use(errorCatch);
 
 if (process.env.NODE_ENV == "development") {
   console.log("logger enabled".bold());
