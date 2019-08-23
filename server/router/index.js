@@ -1,18 +1,18 @@
 const router = require("koa-router")();
 const fs = require("fs");
-const cors = require("./cors");
-const errorCatch = require("./error");
+
 module.exports = router;
 
 // CORS for development
-router.use(cors(["http://localhost:5000", "http://127.0.0.1:5000"]));
 
-router.use(errorCatch);
+router.post("/test", (ctx, next) => {
+  ctx.body = ctx.request.body;
+  // throw new Error("abcde");
+  ctx.response.message = "done and done";
 
-if (process.env.NODE_ENV == "development") {
-  console.log("logger enabled".bold());
-  router.use(require("./logger"));
-}
+  // ctx.response.status = 200;
+  return next();
+});
 
 // Mounting our sub router modules.  ## DIRECTORY PATTERN SHOULD MATCH OUR URL PATH.
 fs.readdirSync(__dirname)

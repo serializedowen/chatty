@@ -24,8 +24,8 @@ user.createUser = (username, password) => {
   return promiseQuery({
     sql: query,
     values: [
-      pool.escape(username),
-      pool.escape(password),
+      username,
+      password,
       crypto
         .createHash("md5")
         .update(password)
