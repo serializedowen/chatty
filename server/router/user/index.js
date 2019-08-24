@@ -1,26 +1,34 @@
 const router = require("koa-router")();
-const userDB = require("../../db/user");
+const User = require("../../db/user");
 const isEmpty = require("lodash/isEmpty");
 module.exports = router;
 
-router.get("/add", async (ctx, next) => {
-  await userDB.createUser("aee", "123");
-  ctx.status = 200;
-  return next();
-});
+router.post("/new", async (ctx, next) => {
+  let user = ctx.request.body;
 
-router.post("/add", async (ctx, next) => {});
-
-router.get("/find", async (ctx, next) => {
-  let res = await userDB.findUser("aee");
-
-  if (!isEmpty(res.results)) {
-    ctx.body = res.results;
+  if (user && user.username && user.password) {
+    await User.createUser(user.username, user.password.toString());
+    ctx.status = 200;
   } else {
-    ctx.status = 404;
+    ctx.status = 400;
+    ctx.body = "Required value missing";
   }
   return next();
 });
+
+// router.post("/find", async (ctx, next) => {
+//   let res = await User.findUser({
+//     fieldName: "username",
+//     value: ctx.request.body.username
+//   });
+
+//   if (!isEmpty(res.results)) {
+//     ctx.body = res.results;
+//   } else {
+//     ctx.status = 404;
+//   }
+//   return next();
+// });
 
 router.post("/test", (ctx, next) => {
   ctx.body = ctx.request;
@@ -31,4 +39,12 @@ router.post("/test", (ctx, next) => {
   return next();
 });
 
-router.get("/:id");
+router.get("/:id", async (ctx, next) => {
+  let res = await User.findUser({ fieldName: "hash_id", value: ctx.params.id });
+  if (!isEmpty(res.results)) {
+    ctx.body = res.results;
+  } else {
+    ctx.status = 404;
+  }
+  return next();
+});

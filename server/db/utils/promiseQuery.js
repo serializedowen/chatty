@@ -15,6 +15,7 @@ module.exports = ({ sql, values }) => {
             if (err) {
               return reject(err);
             } else {
+              console.log(results);
               return resolve({ results, fields });
             }
           }

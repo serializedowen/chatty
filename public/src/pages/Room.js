@@ -1,31 +1,11 @@
 import React, { Component } from "react";
 import io from "socket.io-client";
-import CONFIG from "./config";
-import axios from "./config/axios";
+import CONFIG from "../config";
+import axios from "../config/axios";
 import Button from "@material-ui/core/Button";
-import cookie from "./utils/cookie";
+import cookie from "../utils/cookie";
 import Chip from "@material-ui/core/Chip";
-
-// import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-
-// const styles = makeStyles(theme => ({
-//   container: {
-//     display: "flex",
-//     flexWrap: "wrap"
-//   },
-//   textField: {
-//     marginLeft: theme.spacing(1),
-//     marginRight: theme.spacing(1),
-//     width: 200
-//   },
-//   dense: {
-//     marginTop: 19
-//   },
-//   menu: {
-//     width: 200
-//   }
-// }))();
 
 export default class Room extends Component {
   constructor(props) {
@@ -48,7 +28,7 @@ export default class Room extends Component {
     this.setState({ input: "" });
   }
 
-  login2 = () => {
+  login = () => {
     axios.post("/test", { a: 123 });
   };
 
