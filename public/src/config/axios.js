@@ -12,7 +12,7 @@ instance.eventEmitter = new EventEmitter();
 
 instance.interceptors.response.use(
   resolve => resolve,
-  err => instance.eventEmitter.emit("network error", "an eror")
+  err => instance.eventEmitter.emit("network error", "an error")
 );
 
 export default instance;

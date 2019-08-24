@@ -7,7 +7,19 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "./config/axios";
-import { Transition } from "react-transition-group";
+import { CSSTransition as Transition } from "react-transition-group";
+
+const defaultStyle = {
+  transition: `opacity 300ms ease-in-out`,
+  opacity: 0
+};
+
+const transitionStyles = {
+  entering: { opacity: 1 },
+  entered: { opacity: 1 },
+  exiting: { opacity: 0 },
+  exited: { opacity: 0 }
+};
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,62 +36,66 @@ const useStyles = makeStyles(theme => ({
 
 export default function ErrorBanner() {
   const classes = useStyles();
-  const [show, setShow] = React.useState(false);
-  let timer;
 
-  const [error, setError] = React.useState("");
+  const [values, setValues] = React.useState({
+    show: false,
+    timer: undefined,
+    error: ""
+  });
 
   const clearError = () => {
-    setError("");
-    setShow(false);
-    console.log(timer);
-    clearTimeout(timer);
+    clearTimeout(values.timer);
+    setValues({
+      error: "",
+      show: false,
+      timer: undefined
+    });
   };
 
   const showError = err => {
-    setError(err);
-    setShow(true);
-    timer = setTimeout(() => clearError(), 5000);
-    console.log(timer);
+    setValues({
+      error: err,
+      show: true,
+      timer: setTimeout(() => clearError(), 5000)
+    });
   };
 
   React.useEffect(() => {
-    const listener = err => {
-      //   console.log(err);
-      showError(err);
-    };
-    axios.eventEmitter.on("network error", listener);
-    return () => axios.eventEmitter.off("network error", listener);
-  });
+    axios.eventEmitter.on("network error", showError);
+    return () => axios.eventEmitter.off("network error", showError);
+  }, []);
 
   React.useEffect(() => {
-    // timer = setTimeout(() => setShow(false), 500);
-    console.log("effect", timer);
-    return clearTimeout(timer);
-  });
+    return () => clearTimeout(values.timer);
+  }, []);
 
-  return show ? (
-    <Transition in={show} timeout={500}>
-      <div className={classes.root}>
-        <AppBar position="static">
-          <Toolbar>
-            <IconButton
-              edge="start"
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="menu"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" className={classes.title}>
-              {error}
-            </Typography>
-            <Button onClick={clearError} color="inherit">
-              Dismiss
-            </Button>
-          </Toolbar>
-        </AppBar>
-      </div>
+  return (
+    <Transition in={values.show} timeout={300} unmountOnExit>
+      {state => (
+        <div
+          className={classes.root}
+          style={{ ...defaultStyle, ...transitionStyles[state] }}
+        >
+          <AppBar position="static">
+            <Toolbar>
+              <IconButton
+                edge="start"
+                className={classes.menuButton}
+                color="inherit"
+                aria-label="menu"
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="h6" className={classes.title}>
+                {values.error}
+              </Typography>
+              <Button onClick={clearError} color="inherit">
+                Dismiss
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </div>
+      )}
     </Transition>
-  ) : null;
+  );
 }
