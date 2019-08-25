@@ -46,7 +46,7 @@ export default function Signup() {
   //   const validator =
 
   return (
-    <form action={signUp}>
+    <form>
       <FormControl required>
         <InputLabel htmlFor="username">Username</InputLabel>
 

@@ -6,8 +6,6 @@
  */
 
 (function(exports) {
-  "use strict";
-
   /**
    * Class for managing events.
    * Can be extended to provide event functionality in other classes.

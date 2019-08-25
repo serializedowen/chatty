@@ -80,7 +80,7 @@ export default class Room extends Component {
           // className={styles.textField}
           value={this.state.input}
           onKeyDown={e => {
-            if (13 == e.keyCode) {
+            if (13 === e.keyCode) {
               this.sendMessage();
             }
           }}
