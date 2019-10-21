@@ -5,7 +5,7 @@ module.exports = (server, options) => {
   io.use((socket, next) => {
     let token = socket.handshake.query.token;
 
-    console.log(token);
+    console.log(socket);
     if (token) {
       return next();
     } else {

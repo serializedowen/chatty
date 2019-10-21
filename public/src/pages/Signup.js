@@ -9,17 +9,25 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import WithValidation from "./withValidation";
+import Cookie from "../utils/cookie";
 
 // Input.prototype.Validate = () => console.log("validate");
 
 export default function Signup() {
   const signUp = () => {
     axios
-      .post("/user/new", {
+      .post("/user/signup", {
         username: values.username,
         password: values.password
       })
-      .then(console.log)
+
+      .then(res => {
+        axios.defaults.headers.common = { Authorization: `Bearer ${res.data}` };
+        Cookie.setCookie("token", res.data);
+      })
+      .then(() => console.log(axios.defaults.headers))
+      // .then()
+      // Intercepted in config/axios
       .catch(err => console.log(err));
   };
 

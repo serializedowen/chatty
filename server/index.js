@@ -18,8 +18,8 @@ app.use(serve("public/static"));
 if (process.env.NODE_ENV == "development") {
   console.log("logger enabled".bold());
   app.use(require("./middlewares/logger"));
-  app.use(cors(["http://localhost:5000", "http://127.0.0.1:5000"]));
 }
+app.use(cors(["http://localhost:5000", "http://127.0.0.1:5000"]));
 
 app.use(errorCatch);
 app.use(bodyParser());

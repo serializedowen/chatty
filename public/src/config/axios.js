@@ -5,7 +5,8 @@ import EventEmitter from "../utils/eventEmitter";
 const instance = axios.create({
   baseURL: `http://${CONFIG.HOST}:${CONFIG.PORT}`,
   timeout: 5000,
-  headers: {}
+  headers: {},
+  withCredentials: true
 });
 
 instance.eventEmitter = new EventEmitter();

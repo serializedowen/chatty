@@ -29,10 +29,6 @@ export default class Room extends Component {
   }
 
   login = () => {
-    axios.post("/test", { a: 123 });
-  };
-
-  login = () => {
     console.log(axios);
     axios
       .get("/signup")
@@ -94,9 +90,6 @@ export default class Room extends Component {
         </Button>
         <Button variant="contained" color="primary" onClick={this.login}>
           登陆
-        </Button>
-        <Button variant="contained" color="primary" onClick={this.login2}>
-          登陆2
         </Button>
       </div>
     );

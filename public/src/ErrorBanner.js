@@ -70,7 +70,7 @@ export default function ErrorBanner() {
   }, []);
 
   return (
-    <Transition appear unmountOnExit in={values.show} timeout={300}>
+    <Transition in={values.show} timeout={300}>
       {state => (
         <div
           className={classes.root}

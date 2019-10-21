@@ -4,6 +4,9 @@ const promiseQuery = require("./utils/promiseQuery");
 const escape = require("mysql").escape;
 const key = require("../config/key");
 
+const UsernameAlreadyExistsError = require("../errors/usernameAlreadyExists");
+const LoginFailureError = require("../errors/loginFailureError");
+
 module.exports = User;
 
 User.findUser = ({ fieldName, value }) => {
@@ -21,7 +24,22 @@ User.findUser = ({ fieldName, value }) => {
   return promiseQuery({ sql: query, values: [fieldName, value] });
 };
 
-User.createUser = (username, password) => {
+User.login = async (username, hashed) => {
+  let res = await User.findUser({ fieldName: "username", value: username });
+  if (res.results && res.results.length === 0) {
+    throw LoginFailureError;
+  } else {
+    let { password, salt } = res.results[0];
+    console.log(password, salt);
+  }
+};
+
+User.createUser = async (username, password) => {
+  let res = await User.findUser({ fieldName: "username", value: username });
+  if (res.results && res.results.length != 0) {
+    throw UsernameAlreadyExistsError;
+  }
+
   let query = `
     INSERT INTO chatty.user 
     (username, password, hash_id, salt) 
