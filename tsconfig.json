@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "server",
+    "allowJs": true,
+    "target": "es6"
+  }
+}

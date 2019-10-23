@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "DEBUG=koa* NODE_ENV=development node server/index.js",
+    "start": "DEBUG=koa* NODE_ENV=development nodemon server/index.js",
     "deploy": "NODE_ENV=production node server/index.js",
     "sync": "node server/db/sequelize/migration/index.js"
   },
@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "eslint": "^6.5.1",
-    "eslint-config-google": "^0.14.0"
+    "eslint-config-google": "^0.14.0",
+    "nodemon": "^1.19.4"
   }
 }

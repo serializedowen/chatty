@@ -53,9 +53,13 @@ router.post("/test", (ctx, next) => {
 });
 
 router.get("/:id", async (ctx, next) => {
-  let res = await User.findUser({ fieldName: "hash_id", value: ctx.params.id });
-  if (!isEmpty(res.results)) {
-    ctx.body = res.results;
+  let res = await UserService.findOne({
+    where: {
+      hash_id: ctx.params.id
+    }
+  });
+  if (!isEmpty(res)) {
+    ctx.body = res.dataValues;
   } else {
     ctx.status = 404;
   }
