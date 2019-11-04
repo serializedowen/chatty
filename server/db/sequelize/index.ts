@@ -1,5 +1,10 @@
-const Sequelize = require("sequelize");
-const config = require("../../config/db");
+// const Sequelize = require("sequelize");
+
+import Sequelize from "sequelize";
+import InitUser from "./models/User";
+// import  from 'sequelize'
+
+import config = require("../../config/db");
 
 const sequelize = new Sequelize("chatty", config.username, config.password, {
   host: "localhost",
@@ -21,7 +26,13 @@ sequelize
     console.error("Unable to connect to the database:", err);
   });
 
-sequelize.import(__dirname + "/models/User.js");
-sequelize.import(__dirname + "/models/Room.js");
+sequelize.import(__dirname + "/models/User");
+sequelize.import(__dirname + "/models/Room");
 
-module.exports = sequelize;
+const dbInstance = {
+  sequelize,
+  User: InitUser(sequelize)
+};
+
+// module.exports = sequelize;
+export default sequelize;

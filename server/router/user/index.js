@@ -34,7 +34,7 @@ router.post("/signup", async (ctx, next) => {
       user.username,
       user.password.toString()
     );
-    console.log(result.results);
+    const dbItem = result.dataValues;
     ctx.body = AuthService.generateToken({ username: user.username });
   } else {
     ctx.status = 400;

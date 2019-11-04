@@ -1,7 +1,7 @@
-const router = require("koa-router")();
-const fs = require("fs");
+import Router = require("koa-router");
+import fs = require("fs");
 
-module.exports = router;
+const router = new Router();
 
 // CORS for development
 
@@ -31,3 +31,4 @@ router.get("/signup", async (ctx, next) => {
   });
   return next();
 });
+export default router;

@@ -1,7 +1,8 @@
-const isFunction = require("lodash/isFunction");
 const ClientError = require("../errors/clientError");
 
-module.exports = async function error(ctx, next) {
+import { Context } from "koa";
+
+export default async function error(ctx: Context, next: Function) {
   try {
     await next();
   } catch (e) {
@@ -25,4 +26,4 @@ module.exports = async function error(ctx, next) {
       }
     }
   }
-};
+}
