@@ -13,7 +13,8 @@ interface UserAttributes {
   updatedAt?: string;
 }
 
-type UserInstance = SequelizeStatic.Instance<UserAttributes> & UserAttributes;
+export type UserInstance = SequelizeStatic.Instance<UserAttributes> &
+  UserAttributes;
 export type UserModel = SequelizeStatic.Model<UserInstance, UserAttributes>;
 
 export default (sequelize: Sequelize): UserModel => {

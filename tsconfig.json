@@ -6,7 +6,7 @@
     "outDir": "dist/",
     "moduleResolution": "node",
     "sourceMap": true,
-    "typeRoots": ["node_modules/@types"]
+    "typeRoots": ["node_modules/@types", "server/types"]
   },
   "include": ["server/**/*"],
 

@@ -1,10 +1,6 @@
-// const Sequelize = require("sequelize");
-
 import Sequelize from "sequelize";
 import InitUser from "./models/User";
-// import  from 'sequelize'
-
-import config = require("../../config/db");
+import config from "../../config/db";
 
 const sequelize = new Sequelize("chatty", config.username, config.password, {
   host: "localhost",

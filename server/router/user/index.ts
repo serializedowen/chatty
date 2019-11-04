@@ -1,11 +1,10 @@
-const router = require("koa-router")();
-const UserService = require("../../service/User");
+import Router = require("koa-router");
+import UserService from "../../service/User";
+import AuthService from "../../service/auth";
+import { Context } from "koa";
+import isEmpty = require("lodash/isEmpty");
 
-const isEmpty = require("lodash/isEmpty");
-const escape = require("mysql").escape;
-const AuthService = require("../../service/auth");
-
-module.exports = router;
+const router = new Router();
 
 router.post("/login", async (ctx, next) => {
   let user = ctx.request.body;
@@ -24,7 +23,7 @@ router.post("/login", async (ctx, next) => {
   return next();
 });
 
-router.get("/verify", async (ctx, next) => {});
+router.get("/verify", async (ctx: Context, next: Function) => {});
 
 router.post("/signup", async (ctx, next) => {
   let user = ctx.request.body;
@@ -34,7 +33,8 @@ router.post("/signup", async (ctx, next) => {
       user.username,
       user.password.toString()
     );
-    const dbItem = result.dataValues;
+    // const dbItem = result.dataValues;
+    // result.
     ctx.body = AuthService.generateToken({ username: user.username });
   } else {
     ctx.status = 400;
@@ -52,7 +52,7 @@ router.post("/test", (ctx, next) => {
   return next();
 });
 
-router.get("/:id", async (ctx, next) => {
+router.get("/:id", async (ctx: Context, next) => {
   let res = await UserService.findOne({
     where: {
       hash_id: ctx.params.id
@@ -65,3 +65,6 @@ router.get("/:id", async (ctx, next) => {
   }
   return next();
 });
+
+export default router;
+module.exports = router;
