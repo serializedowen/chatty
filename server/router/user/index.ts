@@ -1,6 +1,6 @@
 import Router = require("koa-router");
 import UserService from "../../service/User";
-import AuthService from "../../service/auth";
+import AuthService from "../../service/Auth";
 import isEmpty = require("lodash/isEmpty");
 
 const router = new Router();
