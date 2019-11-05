@@ -2,8 +2,11 @@
 import { Sequelize } from "sequelize";
 
 import * as SequelizeStatic from "sequelize";
+import { MessageInstance, MessageAttributes } from "./Message";
+import { RoomInstance, RoomAttributes } from "./Room";
+
 interface UserAttributes {
-  id?: Number;
+  id?: number;
   username: string;
   salt: string;
   password: string;
@@ -14,8 +17,45 @@ interface UserAttributes {
 }
 
 export type UserInstance = SequelizeStatic.Instance<UserAttributes> &
-  UserAttributes;
+  UserAttributes &
+  UserAssociations & {
+    dataValues: UserAttributes;
+  };
 export type UserModel = SequelizeStatic.Model<UserInstance, UserAttributes>;
+
+export type UserAssociations = {
+  getMessages?: SequelizeStatic.HasManyGetAssociationsMixin<MessageInstance>; // Note the null assertions!
+  addMessage?: SequelizeStatic.HasManyAddAssociationMixin<
+    MessageInstance,
+    number
+  >;
+  hasMessage?: SequelizeStatic.HasManyHasAssociationMixin<
+    MessageInstance,
+    number
+  >;
+  countMessages?: SequelizeStatic.HasManyCountAssociationsMixin;
+  createMessage?: SequelizeStatic.HasManyCreateAssociationMixin<
+    MessageAttributes,
+    MessageInstance
+  >;
+
+  getRooms?: SequelizeStatic.BelongsToManyGetAssociationsMixin<RoomInstance>; // Note the null assertions!
+  addRoom?: SequelizeStatic.BelongsToManyAddAssociationMixin<
+    RoomInstance,
+    number,
+    any
+  >;
+  hasRoom?: SequelizeStatic.BelongsToManyHasAssociationMixin<
+    RoomInstance,
+    number
+  >;
+  countRooms?: SequelizeStatic.BelongsToManyCountAssociationsMixin;
+  createRoom?: SequelizeStatic.BelongsToManyCreateAssociationMixin<
+    RoomAttributes,
+    RoomInstance,
+    any
+  >;
+};
 
 export default (sequelize: Sequelize): UserModel => {
   const User = sequelize.define<UserInstance, UserAttributes>("User", {
@@ -30,6 +70,7 @@ export default (sequelize: Sequelize): UserModel => {
     // attributes
     username: {
       type: Sequelize.STRING(16),
+      unique: true,
       allowNull: false
     },
     salt: {
@@ -50,43 +91,4 @@ export default (sequelize: Sequelize): UserModel => {
   });
 
   return User;
-
-  // class User extends Model {}
-  // User.init(
-  //   {
-  //     id: {
-  //       type: DataTypes.INTEGER,
-  //       autoIncrement: true,
-  //       primaryKey: true,
-  //       validate: {
-  //         isUUID: 4
-  //       }
-  //     },
-  //     // attributes
-  //     username: {
-  //       type: DataTypes.STRING(16),
-  //       allowNull: false
-  //     },
-  //     salt: {
-  //       type: DataTypes.STRING(12),
-  //       allowNull: false
-  //     },
-  //     password: {
-  //       type: DataTypes.STRING(255),
-  //       allowNull: false
-  //     },
-  //     email: {
-  //       type: DataTypes.STRING(255)
-  //     },
-  //     hash_id: {
-  //       type: DataTypes.STRING(45),
-  //       allowNull: false
-  //     }
-  //   },
-  //   {
-  //     sequelize,
-  //     modelName: "User"
-  //     // options
-  //   }
-  // );
 };

@@ -1,18 +1,20 @@
 import { Sequelize } from "sequelize";
 import * as SequelizeStatic from "sequelize";
 
-interface RoomAttributes extends RoomCreationAttributes {
-  id?: Number;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
 interface RoomCreationAttributes {
   name: string;
 }
 
+export interface RoomAttributes extends RoomCreationAttributes {
+  id?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export type RoomInstance = SequelizeStatic.Instance<RoomAttributes> &
-  RoomAttributes;
+  RoomAttributes & {
+    dataValues: RoomAttributes;
+  };
 
 export type RoomModel = SequelizeStatic.Model<
   RoomInstance,

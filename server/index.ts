@@ -6,13 +6,14 @@ import errorCatch from "./middlewares/error";
 import bodyParser = require("koa-bodyparser");
 import logger from "./middlewares/logger";
 import websocket from "./websocket";
+import http = require("http");
 
 const app = new Koa();
-const server = require("http").createServer(app.callback());
+const server = http.createServer(app.callback());
 
-websocket(
+const ws = websocket(
   server
-  // , { transports: "polling" }
+  // { transports: ["polling"] }
 );
 
 // APIs

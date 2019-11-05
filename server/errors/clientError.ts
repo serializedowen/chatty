@@ -1,6 +1,6 @@
 interface ClientError extends Error {
-  _isClient: Boolean;
-  statusCode: Number;
+  _isClient: boolean;
+  statusCode: number;
 }
 
 class ClientError extends Error {

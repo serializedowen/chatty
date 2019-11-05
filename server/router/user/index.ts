@@ -1,9 +1,7 @@
 import Router = require("koa-router");
 import UserService from "../../service/User";
 import AuthService from "../../service/auth";
-import { Context } from "koa";
 import isEmpty = require("lodash/isEmpty");
-import User from "../../db/sequelize/models/User";
 
 const router = new Router();
 
@@ -24,7 +22,7 @@ router.post("/login", async (ctx, next) => {
   return next();
 });
 
-router.get("/verify", async (ctx: Context, next: Function) => {});
+router.get("/verify", async (ctx, next) => {});
 
 router.post("/signup", async (ctx, next) => {
   let user = ctx.request.body;
@@ -53,7 +51,7 @@ router.post("/test", (ctx, next) => {
   return next();
 });
 
-router.get("/:id", async (ctx: Context, next) => {
+router.get("/:id", async (ctx, next) => {
   let res = await UserService.findOne({
     where: {
       hash_id: ctx.params.id
@@ -66,17 +64,6 @@ router.get("/:id", async (ctx: Context, next) => {
   }
   return next();
 });
-
-UserService.findOne({
-  where: {
-    username: "owen"
-  }
-});
-// .then(res => console.log(res.hash_id));
-
-UserService.login("owen", "hwowen9455").then(console.log);
-
-// UserService._model.findOne()
 
 export default router;
 module.exports = router;

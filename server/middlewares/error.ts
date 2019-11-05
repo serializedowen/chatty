@@ -1,7 +1,6 @@
-const ClientError = require("../errors/clientError");
+import ClientError from "../errors/clientError";
 
-import { Context } from "koa";
-
+import { ParameterizedContext as Context } from "koa";
 export default async function error(ctx: Context, next: Function) {
   try {
     await next();

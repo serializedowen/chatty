@@ -6,6 +6,8 @@ export default (server: any, options?: io.ServerOptions) => {
   const websocket = io(server, options);
   // sockets
 
+  let currentOnline = 0;
+
   websocket.use((socket, next) => {
     let token = socket.handshake.query.token;
 
@@ -18,7 +20,7 @@ export default (server: any, options?: io.ServerOptions) => {
 
   websocket.on("connection", socket => {
     console.log("new connection");
-
+    currentOnline++;
     socket.on("message", msg => {
       console.log(msg);
       websocket.send(msg);
@@ -26,6 +28,7 @@ export default (server: any, options?: io.ServerOptions) => {
   });
 
   websocket.on("disconnect", () => {
+    currentOnline--;
     console.log("dis");
   });
 

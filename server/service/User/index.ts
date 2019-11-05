@@ -1,10 +1,9 @@
 import crypto = require("crypto");
 import LoginFailureError = require("../../errors/loginFailureError");
-import AuthService from "../auth";
+import AuthService from "../Auth";
 import UsernameAlreadyExistsError = require("../../errors/usernameAlreadyExists");
-import DBInstance from "../../db/sequelize/index";
+import { DBInstance } from "../../db/sequelize";
 import { UserModel } from "../../db/sequelize/models/User";
-import { isFunction } from "lodash";
 
 interface UserService extends UserModel {
   _model: UserModel;
@@ -62,12 +61,14 @@ class UserService {
 /**
  * Proxy function calls to underlying Model if not found on Service Instance
  */
-const service = new Proxy(new UserService(DBInstance.models.User), {
+const service = new Proxy(new UserService(DBInstance.User), {
   get: (obj, prop) => {
     if (prop in obj) {
       return obj[prop];
     } else {
-      if (isFunction(obj._model[prop])) {
+      if (
+        Object.prototype.toString.call(obj._model[prop]) === "[object Function]"
+      ) {
         // Function.call();
         return (...args) => obj._model[prop].call(obj._model, ...args);
       }
