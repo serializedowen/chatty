@@ -1,17 +1,19 @@
 import crypto = require("crypto");
-import LoginFailureError = require("../../errors/loginFailureError");
+import createProxy from "../Proxy";
+import ServiceBase from "../ServiceBase";
 import AuthService from "../Auth";
-import UsernameAlreadyExistsError = require("../../errors/usernameAlreadyExists");
+import LoginFailureError = require("../../errors/loginFailureError");
+import UsernameAlreadyExistsError from "../../errors/usernameAlreadyExists";
 import { DBInstance } from "../../db/sequelize";
 import { UserModel } from "../../db/sequelize/models/User";
 
-interface UserService extends UserModel {
-  _model: UserModel;
-}
+// type UserService = ServiceBase<UserModel> & UserModel;
 
-class UserService {
-  constructor(UserModel: UserModel) {
-    this._model = UserModel;
+interface UserService extends UserModel {}
+
+class UserService extends ServiceBase<UserModel> {
+  constructor(model: UserModel) {
+    super(model);
   }
 
   tokenLogin = async (token: string) => {
@@ -56,31 +58,6 @@ class UserService {
   };
 }
 
-// const service = new UserService(DBInstance.models.User);
-
-/**
- * Proxy function calls to underlying Model if not found on Service Instance
- */
-const service = new Proxy(new UserService(DBInstance.User), {
-  get: (obj, prop) => {
-    if (prop in obj) {
-      return obj[prop];
-    } else {
-      if (
-        Object.prototype.toString.call(obj._model[prop]) === "[object Function]"
-      ) {
-        // Function.call();
-        return (...args) => obj._model[prop].call(obj._model, ...args);
-      }
-      return obj._model[prop];
-    }
-  }
-});
-
-// service
-//   .createUser("owen", "hwowen9455")
-//   .then(() => service.login("owen", "hwowen9455"))
-//   .then(console.log)
-//   .catch(console.log);
+const service = createProxy(new UserService(DBInstance.User));
 
 export default service;

@@ -1,4 +1,4 @@
-server/config/db.js
-server/config/key.js
+server/config/
+server/config/
 node_modules/
 dist/
