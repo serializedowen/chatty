@@ -3,7 +3,6 @@ import InitUser from "./models/User";
 import InitMessage from "./models/Message";
 import InitRoom from "./models/Room";
 import config from "../../config/db";
-import User from "./models/User";
 
 const sequelize = new Sequelize("chatty", config.username, config.password, {
   host: "localhost",
@@ -49,10 +48,6 @@ DBInstance.Room.belongsToMany(DBInstance.User, { through: "UserRoom" });
 DBInstance.User.belongsToMany(DBInstance.Room, { through: "UserRoom" });
 DBInstance.Message.belongsToMany(DBInstance.Room, { through: "MessageRoom" });
 DBInstance.Room.belongsToMany(DBInstance.Message, { through: "MessageRoom" });
-
-DBInstance.User.findOne({ where: { username: "owen" } }).then(res => {
-  res.createRoom({ name: "akkk" });
-});
 
 sequelize.sync();
 

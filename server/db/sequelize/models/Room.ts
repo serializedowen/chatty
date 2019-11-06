@@ -25,6 +25,7 @@ export type RoomModel = SequelizeStatic.Model<
 export default (sequelize: Sequelize): RoomModel => {
   const attributes: SequelizeAttributes<RoomAttributes> = {
     name: {
+      unique: true,
       type: Sequelize.STRING(255),
       allowNull: false
     },

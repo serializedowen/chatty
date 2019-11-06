@@ -2,10 +2,13 @@ import axios from "axios";
 import CONFIG from "./index";
 
 import EventEmitter from "../utils/eventEmitter";
+import cookie from "../utils/cookie";
 const instance = axios.create({
   baseURL: `http://${CONFIG.HOST}:${CONFIG.PORT}`,
   timeout: 5000,
-  headers: {},
+  headers: {
+    Authorization: `${cookie.getCookie("token")}`
+  },
   withCredentials: true
 });
 

@@ -11,5 +11,9 @@ router.get("/test", (ctx, next) => {
   return next();
 });
 
+router.post("", (ctx, next) => {
+  console.log(ctx.request.body);
+});
+
 module.exports = router;
 export default router;

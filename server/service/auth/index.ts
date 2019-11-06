@@ -3,8 +3,14 @@ import invalidTokenError from "../../errors/invalidTokenError";
 import crypto = require("crypto");
 import key from "../../config/key";
 
+export interface tokenFields {
+  username?: string;
+  email?: string;
+  profilePicture?: string;
+}
+
 class AuthService {
-  static generateToken = (userData, permissions?) => {
+  static generateToken = (userData: tokenFields, permissions?) => {
     return jwt.sign({ ...userData }, key, {
       algorithm: "HS256",
       expiresIn: "2h"

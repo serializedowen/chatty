@@ -1,9 +1,22 @@
 import Router = require("koa-router");
 import UserService from "../../service/User";
 import AuthService from "../../service/Auth";
-import isEmpty = require("lodash/isEmpty");
+import ClientError from "../../errors/clientError";
 
 const router = new Router();
+
+router.get("/verify", async (ctx, next) => {
+  const token = ctx.request.headers.authorization;
+  if (!token) {
+    ctx.status = 400;
+    throw new ClientError("No token found");
+  } else {
+    ctx.status = 200;
+
+    //@ts-ignore
+    ctx.response.body = AuthService.decodeToken(token).username;
+  }
+});
 
 router.post("/login", async (ctx, next) => {
   let user = ctx.request.body;
@@ -22,8 +35,6 @@ router.post("/login", async (ctx, next) => {
   return next();
 });
 
-router.get("/verify", async (ctx, next) => {});
-
 router.post("/signup", async (ctx, next) => {
   let user = ctx.request.body;
 
@@ -34,6 +45,7 @@ router.post("/signup", async (ctx, next) => {
     );
     // const dbItem = result.dataValues;
     // result.
+
     ctx.body = AuthService.generateToken({ username: user.username });
   } else {
     ctx.status = 400;
@@ -57,13 +69,17 @@ router.get("/:id", async (ctx, next) => {
       hash_id: ctx.params.id
     }
   });
-  if (!isEmpty(res)) {
+
+  console.log(res);
+  if (res) {
     ctx.body = res.dataValues;
   } else {
     ctx.status = 404;
   }
   return next();
 });
+
+router.get("/:id/messages", async (ctx, next) => {});
 
 export default router;
 module.exports = router;

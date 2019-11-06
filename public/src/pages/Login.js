@@ -8,7 +8,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import WithValidation from "./withValidation";
+
 import Cookie from "../utils/cookie";
 
 // Input.prototype.Validate = () => console.log("validate");
@@ -82,7 +82,7 @@ export default function Login() {
         />
       </FormControl>
       <Button variant="contained" color="primary" onClick={login}>
-        注册
+        登陆
       </Button>
     </form>
   );

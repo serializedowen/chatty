@@ -12,9 +12,15 @@ import ChatIcon from "@material-ui/icons/ForumOutlined";
 import ErrorBanner from "../ErrorBanner";
 function AppRouter(props) {
   // console.log(props);
+
   return (
     <Router>
       <ErrorBanner />
+
+      <Route path="/" exact component={Index} />
+      <Route path="/signup" component={Signup} />
+      <Route path="/login" component={Login} />
+      <Route path="/room" component={Room} />
       <BottomNavigation
         showLabels
         //   value={value}
@@ -51,10 +57,6 @@ function AppRouter(props) {
           to="/login"
         />
       </BottomNavigation>
-      <Route path="/" exact component={Index} />
-      <Route path="/signup" component={Signup} />
-      <Route path="/login" component={Login} />
-      <Route path="/room" component={Room} />
     </Router>
   );
 }

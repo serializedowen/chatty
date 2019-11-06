@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import cookie from "../utils/cookie";
 import Chip from "@material-ui/core/Chip";
 import TextField from "@material-ui/core/TextField";
+// import { messa } from "../../../eventTypes";
 
 export default class Room extends Component {
   constructor(props) {
@@ -31,11 +32,8 @@ export default class Room extends Component {
   login = () => {
     console.log(axios);
     axios
-      .get("/signup")
-      .then(res => {
-        console.log(res);
-        cookie.setCookie("token", res.data.token);
-      })
+      .get("/user/verify")
+
       .catch(console.log);
   };
 
