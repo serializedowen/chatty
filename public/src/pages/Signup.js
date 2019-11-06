@@ -16,7 +16,7 @@ import Cookie from "../utils/cookie";
 export default function Signup() {
   const signUp = () => {
     axios
-      .post("/user/signup", {
+      .post("/signup", {
         username: values.username,
         password: values.password
       })

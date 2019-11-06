@@ -16,6 +16,8 @@ const ws = websocket(
   // { transports: ["polling"] }
 );
 
+app.use(errorCatch);
+
 // APIs
 app.use(serve("public/static"));
 
@@ -26,7 +28,6 @@ if (process.env.NODE_ENV == "development") {
 }
 app.use(cors(["http://localhost:5000", "http://127.0.0.1:5000"]));
 
-app.use(errorCatch);
 app.use(bodyParser());
 
 // console.log(app);

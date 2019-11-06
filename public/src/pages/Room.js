@@ -32,7 +32,7 @@ export default class Room extends Component {
   login = () => {
     console.log(axios);
     axios
-      .get("/user/verify")
+      .get("/verify")
 
       .catch(console.log);
   };
