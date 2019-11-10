@@ -1,7 +1,11 @@
 import { Context } from "koa";
+import { upperCase } from "lodash";
+import chalk from "chalk";
 
 export default async function logger(ctx: Context, next: Function) {
-  console.log("Logger: " + ctx.request.url);
+  console.log(
+    chalk.green(`Logger: ${upperCase(ctx.method)} ${ctx.request.url}`)
+  );
   let now = Date.now();
   await next();
 
