@@ -1,4 +1,4 @@
-FROM node:10
+FROM node:12
 
 # Create app directory
 WORKDIR /usr/src/node-chat
@@ -16,4 +16,6 @@ RUN npm install
 COPY . .
 
 EXPOSE 5000
-CMD [ "node", "server/index.js" ]
+
+CMD ["tsc"]
+CMD [ "node", "dist/server.js" ]
