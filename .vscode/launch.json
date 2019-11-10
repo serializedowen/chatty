@@ -8,13 +8,14 @@
       "type": "node",
       "request": "launch",
       "name": "Launch Program with nodemon",
-      "program": "${workspaceFolder}/dist/index.js",
+      "program": "${workspaceFolder}/dist/server.js",
       "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/nodemon",
       "restart": true,
       "envFile": "${workspaceFolder}/.env",
-      "preLaunchTask": "tsc: watch - tsconfig.json",
+      // "preLaunchTask": "tsc: watch - tsconfig.json",
       "outFiles": ["${workspaceFolder}/dist/**/*.js"]
     },
+
     {
       "type": "node",
       "request": "attach",

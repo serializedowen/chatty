@@ -7,6 +7,8 @@ export interface tokenFields {
   username?: string;
   email?: string;
   profilePicture?: string;
+  iat?: number;
+  exp?: number;
 }
 
 class AuthService {

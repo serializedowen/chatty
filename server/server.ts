@@ -1,20 +1,23 @@
 import Koa = require("koa");
 import serve = require("koa-static");
-import router from "./router";
 import cors from "./middlewares/cors";
 import errorCatch from "./middlewares/error";
 import bodyParser = require("koa-bodyparser");
 import logger from "./middlewares/logger";
 import websocket from "./websocket";
 import http = require("http");
+import chalk from "chalk";
 
 const app = new Koa();
 const server = http.createServer(app.callback());
-
 const ws = websocket(
   server
   // { transports: ["polling"] }
 );
+export default ws;
+module.exports = ws;
+
+import router from "./router";
 
 app.use(errorCatch);
 
@@ -22,7 +25,7 @@ app.use(errorCatch);
 app.use(serve("public/static"));
 
 if (process.env.NODE_ENV == "development") {
-  console.log("logger enabled");
+  console.log(chalk.green("logger enabled"));
 
   app.use(logger);
 }
