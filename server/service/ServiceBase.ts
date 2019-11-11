@@ -1,5 +1,3 @@
-// import { a } from "../websocket";
-
 interface ServiceBase<T> {
   _model: T;
   ws: SocketIO.Server;
@@ -8,7 +6,6 @@ interface ServiceBase<T> {
 class ServiceBase<T> {
   constructor(model: T) {
     this._model = model;
-    // this.ws = ws;
   }
 }
 

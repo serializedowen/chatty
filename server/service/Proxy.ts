@@ -1,5 +1,10 @@
 const _proxyHandler = {
   get: (obj, prop) => {
+    // Injecting our websocket instance in runtime.
+    if (!obj.ws) {
+      obj.ws = require("../server");
+    }
+
     if (prop in obj) {
       return obj[prop];
     } else {

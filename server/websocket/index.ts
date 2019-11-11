@@ -24,13 +24,7 @@ export default (server: any, options?: io.ServerOptions) => {
     try {
       //@ts-ignore
       let { username } = AuthService.decodeToken(socket.handshake.query.token);
-
       let UserInstance = await UserService.findOne({ where: { username } });
-
-      // let UserInstance = await UserService.findOne({
-      //   where: { username: "owen" }
-      // });
-
       if (UserInstance) {
         // UserInstance.getRooms().then(console.log);
         UserInstance.getRooms().then(rooms =>
@@ -38,10 +32,8 @@ export default (server: any, options?: io.ServerOptions) => {
         );
 
         currentOnline++;
-        console.log(currentOnline);
         console.log(UserInstance.username + " just logged in");
         onlineUsers.push(UserInstance);
-        console.log("new connection");
 
         socket.on("message", msg => {
           UserInstance.createRoom();
@@ -51,6 +43,9 @@ export default (server: any, options?: io.ServerOptions) => {
 
         socket.on("disconnect", e => {
           currentOnline--;
+          onlineUsers = onlineUsers.filter(
+            user => user.username === UserInstance.username
+          );
           console.log(UserInstance.username + " just logged out");
         });
       } else {
