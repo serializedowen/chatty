@@ -1,8 +1,9 @@
-import Sequelize from "sequelize";
-import InitUser from "./models/User";
-import InitMessage from "./models/Message";
-import InitRoom from "./models/Room";
+import { Sequelize } from "sequelize";
+import InitUser, { User } from "./models/User";
+import InitMessage, { Message } from "./models/Message";
+import InitRoom, { Room } from "./models/Room";
 import config from "../../config/db";
+import InitComment, { Comment } from "./models/Comment";
 
 const sequelize = new Sequelize("chatty", config.username, config.password, {
   host: "localhost",
@@ -15,6 +16,8 @@ const sequelize = new Sequelize("chatty", config.username, config.password, {
   }
 });
 
+// new sequelize.Comment();
+
 sequelize
   .authenticate()
   .then(() => {
@@ -24,15 +27,17 @@ sequelize
     console.error("Unable to connect to the database:", err);
   });
 
-// sequelize.import(__dirname + "/models/User");
-// sequelize.import(__dirname + "/models/Room");
-// sequelize.import(__dirname + "/models/Message");
+InitComment(sequelize);
+InitRoom(sequelize);
+InitMessage(sequelize);
+InitUser(sequelize);
 
 const DBInstance = {
   sequelize,
-  User: InitUser(sequelize),
-  Message: InitMessage(sequelize),
-  Room: InitRoom(sequelize)
+  User,
+  Message,
+  Room,
+  Comment
 };
 
 /**

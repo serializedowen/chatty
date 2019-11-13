@@ -1,18 +1,20 @@
 import ServiceBase from "../ServiceBase";
-import { RoomModel, RoomInstance } from "../../db/sequelize/models/Room";
+import { Room } from "../../db/sequelize/models/Room";
 import createProxy from "../Proxy";
 import { DBInstance } from "../../db/sequelize";
 
-interface RoomService extends RoomModel {}
+interface RoomService extends Room {}
 
-class RoomService extends ServiceBase<RoomModel> {
-  Rooms: RoomInstance[];
+class RoomService extends ServiceBase<Room> {
+  Rooms: Room[];
 
-  constructor(model: RoomModel) {
+  constructor(model) {
     super(model);
+
     // this.Rooms = [];
   }
 
+  //@Override
   create() {
     this._model
       .create(arguments)
@@ -25,4 +27,6 @@ class RoomService extends ServiceBase<RoomModel> {
   }
 }
 
-export default createProxy(new RoomService(DBInstance.Room));
+const a = new RoomService(Room);
+
+export default createProxy(new RoomService(Room));

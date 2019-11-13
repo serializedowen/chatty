@@ -1,7 +1,7 @@
 import crypto = require("crypto");
 import createProxy from "../Proxy";
 import ServiceBase from "../ServiceBase";
-import AuthService from "../Auth";
+import AuthService, { tokenFields } from "../Auth";
 import LoginFailureError = require("../../errors/loginFailureError");
 import UsernameAlreadyExistsError from "../../errors/usernameAlreadyExists";
 import { DBInstance } from "../../db/sequelize";
@@ -17,8 +17,7 @@ class UserService extends ServiceBase<UserModel> {
   }
 
   tokenLogin = async (token: string) => {
-    //@ts-ignore
-    let { username } = AuthService.decodeToken(token);
+    let { username } = AuthService.decodeToken(token) as tokenFields;
     await this._model.findOne({ where: { username } });
   };
 
