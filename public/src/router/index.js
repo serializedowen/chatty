@@ -10,6 +10,7 @@ import SignUpIcon from "@material-ui/icons/PersonAddOutlined";
 import HomeIcon from "@material-ui/icons/HomeOutlined";
 import ChatIcon from "@material-ui/icons/ForumOutlined";
 import ErrorBanner from "../ErrorBanner";
+import RoomContainer from "../pages/RoomContainer";
 function AppRouter(props) {
   // console.log(props);
 
@@ -20,7 +21,7 @@ function AppRouter(props) {
       <Route path="/" exact component={Index} />
       <Route path="/signup" component={Signup} />
       <Route path="/login" component={Login} />
-      <Route path="/room" component={Room} />
+      <Route path="/rooms" component={RoomContainer} />
       <BottomNavigation
         showLabels
         //   value={value}
@@ -40,7 +41,7 @@ function AppRouter(props) {
           value="房间"
           icon={<ChatIcon />}
           component={Link}
-          to="/room"
+          to="/rooms"
         />
         <BottomNavigationAction
           label="注册"
