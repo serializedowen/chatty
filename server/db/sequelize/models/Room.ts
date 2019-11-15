@@ -2,7 +2,7 @@ import { Sequelize } from "sequelize";
 import * as SequelizeStatic from "sequelize";
 import { MessageInstance, MessageAttributes } from "./Message";
 
-interface RoomCreationAttributes {
+export interface RoomCreationAttributes {
   name: string;
 }
 
@@ -10,6 +10,7 @@ export interface RoomAttributes extends RoomCreationAttributes {
   id?: number;
   createdAt?: string;
   updatedAt?: string;
+  hashId?: string;
 }
 
 export type RoomInstance = SequelizeStatic.Instance<RoomAttributes> &
@@ -43,6 +44,11 @@ export type RoomAssociations = {
 
 export default (sequelize: Sequelize): RoomModel => {
   const attributes: SequelizeAttributes<RoomAttributes> = {
+    hashId: {
+      type: Sequelize.UUID,
+      defaultValue: Sequelize.UUIDV4,
+      allowNull: false
+    },
     name: {
       unique: true,
       type: Sequelize.STRING(255),

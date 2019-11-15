@@ -11,7 +11,7 @@ interface UserAttributes {
   salt: string;
   password: string;
   email?: string;
-  hash_id: string;
+  hashId?: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -84,8 +84,9 @@ export default (sequelize: Sequelize): UserModel => {
     email: {
       type: Sequelize.STRING(255)
     },
-    hash_id: {
-      type: Sequelize.STRING(45),
+    hashId: {
+      type: Sequelize.UUID,
+      defaultValue: Sequelize.UUIDV4,
       allowNull: false
     }
   });
