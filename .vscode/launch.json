@@ -15,7 +15,13 @@
       // "preLaunchTask": "tsc: watch - tsconfig.json",
       "outFiles": ["${workspaceFolder}/dist/**/*.js"]
     },
-
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch Chrome",
+      "url": "http://localhost:5000",
+      "webRoot": "${workspaceFolder/public/src}"
+    },
     {
       "type": "node",
       "request": "attach",

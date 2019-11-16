@@ -4,6 +4,7 @@
     "allowJs": true,
     // "declaration": true,
     "target": "es6",
+    "experimentalDecorators": true,
     "outDir": "dist/",
     "moduleResolution": "node",
     "sourceMap": true,

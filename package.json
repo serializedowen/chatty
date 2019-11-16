@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "DEBUG=koa* NODE_ENV=development  nodemon --delay 2.5 dist/server.js",
-    "tsc": "tsc --watch",
+    "tsc": "rm -rf dist/ && tsc --watch",
     "deploy": "NODE_ENV=production node server/server.js",
     "sync": "node server/db/sequelize/migration/index.js"
   },

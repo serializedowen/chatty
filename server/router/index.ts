@@ -2,6 +2,7 @@ import Router = require("koa-router");
 import fs = require("fs");
 import { UserService, AuthService } from "../service";
 import ClientError from "../errors/clientError";
+import parseJWT from "../middlewares/parseJWT";
 
 const router = new Router();
 

@@ -1,12 +1,23 @@
 import io = require("socket.io");
 import { UserService, AuthService, RoomService } from "../service";
 import User, { UserInstance } from "../db/sequelize/models/User";
+import { Server } from "http";
+import emitter, { TEmitter, CREATED_ROOM } from "../emitter";
+import { RoomInstance } from "../db/sequelize/models/Room";
+import { tokenFields } from "../service/Auth";
+import chalk from "chalk";
 
-export default async (server: any, options?: io.ServerOptions) => {
+export type WSServer = SocketIO.Server & {
+  emitter?: TEmitter;
+};
+
+export default async (server: Server, options?: io.ServerOptions) => {
   // import io = require("socket.io")(server, options)
 
-  const websocket = io(server, options);
+  const websocket: WSServer = io(server, options);
   // sockets
+
+  websocket.emitter = emitter;
 
   let onlineUsers: UserInstance[] = [];
   let rooms = await RoomService.findAll();
@@ -21,10 +32,16 @@ export default async (server: any, options?: io.ServerOptions) => {
     }
   });
 
+  websocket.emitter.on(CREATED_ROOM, instance => {
+    rooms.push(instance);
+    websocket.emit("create", instance.dataValues);
+  });
+
   websocket.on("connection", async socket => {
     try {
-      //@ts-ignore
-      let { username } = AuthService.decodeToken(socket.handshake.query.token);
+      let { username } = AuthService.decodeToken(
+        socket.handshake.query.token
+      ) as tokenFields;
       let UserInstance = await UserService.findOne({ where: { username } });
 
       if (UserInstance) {
@@ -40,7 +57,8 @@ export default async (server: any, options?: io.ServerOptions) => {
         );
 
         currentOnline++;
-        console.log(UserInstance.username + " just logged in");
+
+        console.log(chalk.cyan(UserInstance.username + " just logged in"));
         onlineUsers.push(UserInstance);
 
         socket.on("message", async msg => {
@@ -58,9 +76,11 @@ export default async (server: any, options?: io.ServerOptions) => {
           console.log(UserInstance.username + " just logged out");
         });
       } else {
+        console.log("rejected");
         socket.disconnect(true);
       }
     } catch (error) {
+      console.log("error validating token");
       socket.disconnect(true);
     }
   });

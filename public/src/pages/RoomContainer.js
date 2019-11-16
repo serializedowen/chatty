@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { Component } from "react";
 import CONFIG from "../config";
 import io from "socket.io-client";
 import cookie from "../utils/cookie";
@@ -8,49 +8,89 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Room from "./Room";
 import CreateRoomDialog from "./CreateRoomDialog";
+import MessageCache from "./hoc/MessageCache";
 
-export default function RoomContainer() {
-  let [socket] = useState();
-  let [rooms, setRooms] = useState([]);
-  const [activeRoom, setactiveRoom] = useState({});
+export class RoomContainer extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeRoom: {},
+      rooms: []
+    };
+  }
 
-  useEffect(() => {
-    axios.get("/api/room").then(res => {
-      setRooms(res.data);
-    });
-
-    socket = io(
+  componentDidMount() {
+    this.socket = io(
       `${CONFIG.HOST}:${CONFIG.PORT}?token=${cookie.getCookie("token")}`
     );
-
-    socket.on("message", message => {
-      console.log(message);
-      // console.log(message);
+    this.socket.on("create", room => {
+      return this.setState({ rooms: this.state.rooms.concat(room) });
     });
-    return () => {
-      socket.close();
-    };
-  }, []);
-  return (
-    <div>
-      <Tabs value={activeRoom.id}>
-        {rooms &&
-          rooms.map(room => (
-            <Tab
-              label={room.name}
-              value={room.id}
-              key={room.id}
-              onClick={() => setactiveRoom(room)}
-              label={
-                <Badge color="secondary" badgeContent={4}>
-                  {room.name}
-                </Badge>
-              }
+
+    axios.get("/api/room").then(res => {
+      this.setState({ rooms: res.data });
+    });
+  }
+
+  componentWillUnmount() {
+    this.socket.close();
+  }
+
+  render() {
+    let { activeRoom, rooms } = this.state;
+    return (
+      <div>
+        <Tabs value={activeRoom.id}>
+          {rooms &&
+            rooms.map(room => (
+              <Tab
+                label={room.name}
+                value={room.id}
+                key={room.id}
+                onClick={() => this.setState({ activeRoom: room })}
+                label={
+                  <Badge color="secondary" badgeContent={4}>
+                    {room.name}
+                  </Badge>
+                }
+              />
+            ))}
+        </Tabs>
+
+        <Tabs>
+          {rooms &&
+            rooms.map(room => (
+              <Tab
+                label={room.name}
+                value={room.id}
+                key={room.id}
+                onClick={() =>
+                  axios.post("/api/my/join-room", { name: room.name })
+                }
+                label={
+                  <Badge color="secondary" badgeContent={4}>
+                    Join {room.name} ?
+                  </Badge>
+                }
+              />
+            ))}
+        </Tabs>
+        <CreateRoomDialog></CreateRoomDialog>
+        {/* <Room activeRoom={activeRoom}></Room> */}
+
+        <MessageCache
+          roomId={activeRoom.hashId}
+          component={cachedMessage => (
+            <Room
+              key={activeRoom.hashId}
+              cache={cachedMessage}
+              activeRoom={activeRoom}
             />
-          ))}
-      </Tabs>
-      <CreateRoomDialog></CreateRoomDialog>
-      <Room></Room>
-    </div>
-  );
+          )}
+        ></MessageCache>
+      </div>
+    );
+  }
 }
+
+export default RoomContainer;

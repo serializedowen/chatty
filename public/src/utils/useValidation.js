@@ -6,7 +6,11 @@ const useValidation = validator => {
   const [errMsg, seterrMsg] = useState("");
   const [validate, setvalidate] = useState(false);
   const [err, seterr] = useState(false);
-  const { current: emitter } = useRef(new EventEmitter());
+  const [emitter, setemitter] = useState(null);
+
+  useEffect(() => {
+    setemitter(new EventEmitter());
+  }, []);
 
   useEffect(() => {
     if (validate) {

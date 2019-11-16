@@ -1,10 +1,5 @@
 const _proxyHandler = {
   get: (obj, prop) => {
-    // Injecting our websocket instance in runtime.
-    if (!obj.ws) {
-      obj.ws = require("../server");
-    }
-
     if (prop in obj) {
       return obj[prop];
     } else {
@@ -22,6 +17,9 @@ const _proxyHandler = {
 /**
  * Proxy function calls to underlying Model if not found on Service Instance
  */
-const createProxy = <T>(target: T): T => new Proxy(target, _proxyHandler);
+const createProxy = <T>(target: T): T => {
+  Object.defineProperty(target, "_proxy", { value: true });
+  return new Proxy(target, _proxyHandler);
+};
 
 export default createProxy;

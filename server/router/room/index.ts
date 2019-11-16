@@ -24,9 +24,9 @@ router.get("/", async (ctx, next) => {
   return next();
 });
 
-router.use("/:name", async (ctx, next) => {
-  let { name } = ctx.params;
-  const room = await RoomService.findOne({ where: { name } });
+router.use("/:id", async (ctx, next) => {
+  let { id } = ctx.params;
+  const room = await RoomService.findOne({ where: { hashId: id } });
   if (!room) {
     ctx.status = 404;
     return;
@@ -36,15 +36,20 @@ router.use("/:name", async (ctx, next) => {
   return next();
 });
 
-router.get("/:name", async (ctx, next) => {
+router.get("/:id", async (ctx, next) => {
   ctx.status = 200;
   ctx.body = ctx.room;
+  console.log(ctx);
   return next();
 });
 
-router.get("/:name/messages", async (ctx, next) => {
-  ctx.body = await ctx.room.getMessages();
+router.get("/:id/messages", async (ctx, next) => {
+  ctx.body = {
+    ...ctx.room.dataValues,
+    messages: await ctx.room.getMessages()
+  };
   ctx.status = 200;
+  return next();
 });
 
 module.exports = router;

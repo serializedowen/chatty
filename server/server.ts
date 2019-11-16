@@ -7,6 +7,8 @@ import logger from "./middlewares/logger";
 import websocket from "./websocket";
 import http = require("http");
 import chalk from "chalk";
+import router from "./router";
+import emitter, { WS_READY } from "./emitter";
 
 const app = new Koa();
 const server = http.createServer(app.callback());
@@ -14,10 +16,10 @@ const ws = websocket(
   server
   // { transports: ["polling"] }
 );
-export default ws;
-module.exports = ws;
+// export default ws;
+// module.exports = ws;
 
-import router from "./router";
+ws.then(ws => emitter.emit(WS_READY, ws));
 
 app.use(errorCatch);
 

@@ -6,7 +6,6 @@ import Button from "@material-ui/core/Button";
 import cookie from "../utils/cookie";
 import Chip from "@material-ui/core/Chip";
 import TextField from "@material-ui/core/TextField";
-// import { messa } from "../../../eventTypes";
 
 export default class Room extends Component {
   constructor(props) {
@@ -44,7 +43,7 @@ export default class Room extends Component {
     this.socket.on("message", message => {
       console.log(message);
       this.setState(prevState => ({
-        messages: [].concat(prevState.messages, message)
+        messages: this.props.cache.concat(prevState.messages, message)
       }));
       // console.log(message);
     });

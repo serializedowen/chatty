@@ -48,10 +48,10 @@ class UserService extends ServiceBase<UserModel> {
       return this._model.create({
         username,
         password: saltedPassword,
-        hash_id: crypto
-          .createHash("md5")
-          .update(username)
-          .digest("hex"),
+        // hash_id: crypto
+        //   .createHash("md5")
+        //   .update(username)
+        //   .digest("hex"),
         salt
       });
     }

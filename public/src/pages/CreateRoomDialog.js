@@ -16,14 +16,14 @@ export default function CreateRoomDialog() {
     if (val === "") {
       throw new Error("This field is required ");
     }
-    if (val.length < 5) {
-      throw new Error("Room name must be longer than 5 characters.");
+    if (val.length < 3) {
+      throw new Error("Room name must be longer than 3 characters.");
     }
   });
 
   const createRoom = () => {
-    validate().then(val => {
-      if (val) {
+    validate().then(valid => {
+      if (valid) {
         axios.post("/api/room", { name }).then(() => setOpen(false));
       }
     });

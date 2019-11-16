@@ -12,7 +12,9 @@
    *
    * @class EventEmitter Manages event registering and emitting.
    */
-  function EventEmitter() {}
+  function EventEmitter() {
+    console.log("create emitter");
+  }
 
   // Shortcuts to improve speed and size
   var proto = EventEmitter.prototype;
