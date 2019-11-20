@@ -15,7 +15,8 @@ export class RoomContainer extends Component {
     super(props);
     this.state = {
       activeRoom: {},
-      rooms: []
+      rooms: [],
+      inRooms: []
     };
   }
 
@@ -57,7 +58,7 @@ export class RoomContainer extends Component {
             ))}
         </Tabs>
 
-        <Tabs>
+        <Tabs value={activeRoom.id}>
           {rooms &&
             rooms.map(room => (
               <Tab
@@ -69,6 +70,24 @@ export class RoomContainer extends Component {
                 }
                 label={
                   <Badge color="secondary" badgeContent={4}>
+                    Leave {room.name} ?
+                  </Badge>
+                }
+              />
+            ))}
+        </Tabs>
+        <Tabs value={activeRoom.id}>
+          {rooms &&
+            rooms.map(room => (
+              <Tab
+                label={room.name}
+                value={room.id}
+                key={room.id}
+                onClick={() =>
+                  axios.post("/api/my/leave-room", { name: room.name })
+                }
+                label={
+                  <Badge color="secondary" badgeContent={4}>
                     Join {room.name} ?
                   </Badge>
                 }
@@ -76,7 +95,6 @@ export class RoomContainer extends Component {
             ))}
         </Tabs>
         <CreateRoomDialog></CreateRoomDialog>
-        {/* <Room activeRoom={activeRoom}></Room> */}
 
         <MessageCache
           roomId={activeRoom.hashId}

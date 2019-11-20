@@ -1,5 +1,16 @@
-import { useState, useEffect, useRef } from "react";
-import EventEmitter from "./eventEmitter";
+import { useState, useEffect } from "react";
+// import EventEmitter from "./eventEmitter";
+import noop from "./noop";
+const { EventEmitter } = window;
+
+const PromiseAllPass = promises => {
+  if (!promises.length) {
+    return Promise.reject("not a valid array.");
+  }
+  return Promise.all(promises).then(
+    values => values.filter(Boolean).length === values.length
+  );
+};
 
 const useValidation = validator => {
   const [value, setvalue] = useState("");
@@ -31,12 +42,15 @@ const useValidation = validator => {
 
   const validateTrigger = () => {
     return new Promise((resolve, reject) => {
-      emitter.once("finish", val => resolve(val));
+      emitter.once("finish", resolve);
       setvalidate(true);
     });
+    // .catch(console.log);
   };
 
   return [value, setvalue, err, errMsg, validateTrigger];
 };
+
+export { PromiseAllPass };
 
 export default useValidation;

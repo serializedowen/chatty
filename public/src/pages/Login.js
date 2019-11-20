@@ -1,41 +1,71 @@
 import React from "react";
 import axios from "../config/axios";
+import reactdom from "react-dom";
 import FormControl from "@material-ui/core/FormControl";
-import Input from "@material-ui/core/Input";
+
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
-import InputLabel from "@material-ui/core/InputLabel";
+
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-
+import useValidation, { PromiseAllPass } from "../utils/useValidation";
 import Cookie from "../utils/cookie";
+import { TextField } from "@material-ui/core";
 
 // Input.prototype.Validate = () => console.log("validate");
 
-export default function Login() {
+export default function Login(props) {
   const login = () => {
-    axios
-      .post("/login", {
-        username: values.username,
-        password: values.password
+    PromiseAllPass([triggerName(), triggerPass()])
+      .then(i => {
+        console.log(i);
+        return i;
       })
-      .then(res => Cookie.setCookie("token", res.data))
-      // Intercepted in config/axios
-      .catch(err => console.log(err));
+      .then(valid => {
+        if (valid) {
+          return axios
+            .post("/login", {
+              username,
+              password
+            })
+            .then(res => Cookie.setCookie("token", res.data))
+            .then(() => {
+              if (typeof props.callback === "function") {
+                return props.callback();
+              }
+            });
+        }
+      });
   };
 
-  const [values, setValues] = React.useState({
-    username: "",
-    password: "",
-    confirmPassword: "",
-    email: "",
-    showPassword: false
+  const [
+    username,
+    setusername,
+    errName,
+    errNameMsg,
+    triggerName
+  ] = useValidation(val => {
+    if (val === "") {
+      throw new Error("username cant be empty");
+    }
   });
 
-  const handleChange = prop => event => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
+  const [
+    password,
+    setpassword,
+    errPass,
+    errPassMsg,
+    triggerPass
+  ] = useValidation(val => {
+    if (val === "") {
+      throw new Error("username cant be empty");
+    }
+  });
+
+  const [values, setValues] = React.useState({
+    showPassword: false
+  });
 
   const handleClickShowPassword = () => {
     setValues({ ...values, showPassword: !values.showPassword });
@@ -45,29 +75,39 @@ export default function Login() {
     event.preventDefault();
   };
 
-  //   const validator =
+  const getActionButtons = () => (
+    <Button variant="contained" color="primary" onClick={login}>
+      登陆
+    </Button>
+  );
 
   return (
     <form>
       <FormControl required>
-        <InputLabel htmlFor="username">Username</InputLabel>
-
-        <Input
+        <TextField
           id="username"
           type="text"
-          value={values.username}
-          onChange={handleChange("username")}
+          label="Username"
+          required
+          onBlur={triggerName}
+          error={errName}
+          helperText={errNameMsg}
+          value={username}
+          onChange={e => setusername(e.target.value)}
         />
       </FormControl>
       <FormControl>
-        <InputLabel htmlFor="adornment-password">Password</InputLabel>
         {/* <WithValidation component={Input} /> */}
-        <Input
+        <TextField
           id="adornment-password"
           type={values.showPassword ? "text" : "password"}
-          value={values.password}
+          value={password}
+          error={errPass}
+          helperText={errPassMsg}
+          onBlur={triggerPass}
           required
-          onChange={handleChange("password")}
+          label="Password"
+          onChange={e => setpassword(e.target.value)}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
@@ -81,9 +121,13 @@ export default function Login() {
           }
         />
       </FormControl>
-      <Button variant="contained" color="primary" onClick={login}>
+      {/* <Button variant="contained" color="primary" onClick={login}>
         登陆
-      </Button>
+      </Button> */}
+      {!props.portal && getActionButtons()}
+      {props.portal &&
+        props.portal.current &&
+        reactdom.createPortal(getActionButtons(), props.portal.current)}
     </form>
   );
 }

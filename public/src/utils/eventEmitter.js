@@ -485,7 +485,10 @@
   // else
   if (typeof module === "object" && module.exports) {
     module.exports = EventEmitter;
-  } else {
+
+    // OWEN added for back-compat
     exports.EventEmitter = EventEmitter;
+  } else {
+    module.EventEmitter = EventEmitter;
   }
 })(typeof window !== "undefined" ? window : this || {});

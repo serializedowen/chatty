@@ -7,7 +7,6 @@ const f = () => {
 };
 
 const g = () => {
-  console.log("object");
   return 0;
 };
 export default function Index() {

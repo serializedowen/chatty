@@ -21,6 +21,23 @@ router.post("/join-room", async (ctx, next) => {
   } else {
     ctx.status = 401;
   }
+  return next();
+});
+
+router.post("/leave-room", async (ctx, next) => {
+  const { name } = ctx.request.body;
+  const user = await UserService.findOne({
+    where: { username: ctx.user.username }
+  });
+
+  if (user) {
+    let room = await RoomService.findOne({ where: { name } });
+    user.removeRoom(room);
+    ctx.status = 200;
+  } else {
+    ctx.status = 401;
+  }
+  return next();
 });
 
 module.exports = router;

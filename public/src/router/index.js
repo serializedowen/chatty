@@ -1,8 +1,11 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  useLocation
+} from "react-router-dom";
 import Index from "../pages/Index";
-import Room from "../pages/Room";
-import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 import { BottomNavigation } from "@material-ui/core";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
@@ -11,6 +14,9 @@ import HomeIcon from "@material-ui/icons/HomeOutlined";
 import ChatIcon from "@material-ui/icons/ForumOutlined";
 import ErrorBanner from "../ErrorBanner";
 import RoomContainer from "../pages/RoomContainer";
+import Login from "../pages/Login";
+import AuthenticationRequired from "../pages/hoc/AuthenticationRequired";
+
 function AppRouter(props) {
   // console.log(props);
 
@@ -21,7 +27,9 @@ function AppRouter(props) {
       <Route path="/" exact component={Index} />
       <Route path="/signup" component={Signup} />
       <Route path="/login" component={Login} />
-      <Route path="/rooms" component={RoomContainer} />
+      <AuthenticationRequired>
+        <Route path="/rooms" component={RoomContainer} />
+      </AuthenticationRequired>
       <BottomNavigation
         showLabels
         //   value={value}

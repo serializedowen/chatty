@@ -6,22 +6,22 @@ import Button from "@material-ui/core/Button";
 import cookie from "../utils/cookie";
 import Chip from "@material-ui/core/Chip";
 import TextField from "@material-ui/core/TextField";
-
+import { throttle } from "lodash";
 export default class Room extends Component {
   constructor(props) {
     super(props);
     // this.styles = useStyles();
     this.state = {
       messages: [],
-      input: "",
-      typing: false
+      input: ""
     };
     this.sendMessage = this.sendMessage.bind(this);
   }
 
-  setTyping() {
-    this.setState({ typing: true });
-  }
+  setTyping = throttle(() => {
+    console.log("object");
+    this.socket.emit("typing", "");
+  }, 1000);
 
   sendMessage() {
     this.socket.send(this.state.input);
@@ -36,18 +36,38 @@ export default class Room extends Component {
       .catch(console.log);
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.cache !== this.props.cache) {
+      this.setState({
+        messages: this.props.cache
+          .map(item => Object.defineProperty(item, "cached", { value: true }))
+          .concat(this.state.messages)
+      });
+    }
+  }
+
   componentDidMount() {
+    // this.setState({messages: this.props.cache})
+
+    this.setState({
+      messages: this.props.cache
+        .map(item => Object.defineProperty(item, "cached", { value: true }))
+        .concat(this.state.messages)
+    });
+
     this.socket = io(
       `${CONFIG.HOST}:${CONFIG.PORT}?token=${cookie.getCookie("token")}`
     );
     this.socket.on("message", message => {
       console.log(message);
       this.setState(prevState => ({
-        messages: this.props.cache.concat(prevState.messages, message)
+        messages: prevState.messages.concat(message)
       }));
       // console.log(message);
     });
     this.socket.on("disconnect", () => console.log("disconnected"));
+
+    this.socket.on("typing", console.log);
   }
 
   componentWillUnmount() {
@@ -59,9 +79,11 @@ export default class Room extends Component {
       <div>
         {/* <ul> */}
         {this.state.messages.map((message, i) => (
-          <Chip clickable label={message} key={i}>
-            {message}
-          </Chip>
+          <Chip
+            clickable
+            label={message.content ? message.content : message}
+            key={i}
+          ></Chip>
         ))}
         {/* </ul> */}
 
@@ -78,6 +100,7 @@ export default class Room extends Component {
             }
           }}
           onChange={e => {
+            this.setTyping();
             this.setState({ [e.target.name]: e.target.value });
           }}
           margin="normal"

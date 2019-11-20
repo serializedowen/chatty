@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -39,34 +39,37 @@ export default function ErrorBanner() {
 
   const [values, setValues] = React.useState({
     show: false,
-    timer: undefined,
     error: ""
   });
 
+  let { current: timer } = useRef({ current: undefined });
+
   const clearError = () => {
-    clearTimeout(values.timer);
+    console.log(timer);
+    clearTimeout(timer);
     setValues({
       error: "",
-      show: false,
-      timer: undefined
+      show: false
     });
   };
 
   const showError = err => {
     setValues({
       error: err,
-      show: true,
-      timer: setTimeout(() => clearError(), 5000)
+      show: true
     });
+
+    timer = setTimeout(() => clearError(), 5000);
+    console.log(timer);
   };
 
   React.useEffect(() => {
-    axios.eventEmitter.on("network error", showError);
+    // axios.eventEmitter.on("network error", showError);
     return () => axios.eventEmitter.off("network error", showError);
   }, []);
 
   React.useEffect(() => {
-    return () => clearTimeout(values.timer);
+    return () => clearTimeout(timer);
   }, []);
 
   return (

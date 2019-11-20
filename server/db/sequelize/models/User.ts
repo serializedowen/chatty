@@ -55,6 +55,11 @@ export type UserAssociations = {
     RoomInstance,
     any
   >;
+
+  removeRoom?: SequelizeStatic.BelongsToManyRemoveAssociationMixin<
+    RoomInstance,
+    number
+  >;
 };
 
 export default (sequelize: Sequelize): UserModel => {

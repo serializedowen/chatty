@@ -5,11 +5,11 @@ export default function MessageCache(props) {
 
   useEffect(() => {
     if (props.roomId) {
-      if (!cache[props.roomId]) {
+      // if (!cache[props.roomId]) {
         axios.get(`/api/room/${props.roomId}/messages`).then(res => {
           setcache({ ...cache, [props.roomId]: res.data.messages });
         });
-      }
+      // }
     }
 
     //   return () => {

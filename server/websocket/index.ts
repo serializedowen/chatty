@@ -68,6 +68,10 @@ export default async (server: Server, options?: io.ServerOptions) => {
           websocket.send(`${UserInstance.username} says: ${msg}`);
         });
 
+        socket.on("typing", () => {
+          websocket.emit("typing", username + "isTyping");
+        });
+
         socket.on("disconnect", e => {
           currentOnline--;
           onlineUsers = onlineUsers.filter(
