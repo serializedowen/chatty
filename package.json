@@ -5,8 +5,10 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cross-env DEBUG=koa* NODE_ENV=development  nodemon --delay 2.5 --ignore public/ dist/server.js",
+    "start": "npm run nodemon",
+    "co": "concurrently 'npm run tsc' 'npm run nodemon'",
     "tsc": "rm -rf dist/ && tsc --watch",
+    "nodemon": "cross-env DEBUG=koa* NODE_ENV=development  nodemon --delay 2.5 --ignore public/ dist/server.js",
     "deploy": "NODE_ENV=production node server/server.js",
     "sync": "node server/db/sequelize/migration/index.js"
   },
@@ -35,6 +37,7 @@
     "@types/lodash": "^4.14.144",
     "@types/sequelize": "^4.28.6",
     "@types/socket.io": "^2.1.4",
+    "concurrently": "^5.0.0",
     "cross-env": "^6.0.3",
     "nodemon": "^1.19.4",
     "typescript": "^3.7.2"
