@@ -7,6 +7,7 @@ let isAuthenticated = true;
 
 function AuthenticationRequired({ children, ...rest }) {
   const ref = useRef(undefined);
+
   console.log(rest);
   return isAuthenticated ? (
     children

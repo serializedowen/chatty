@@ -21,7 +21,6 @@ class RoomService extends ServiceBase<RoomModel> {
     this._model.afterCreate(instance =>
       this.ws.emitter.emit(CREATED_ROOM, instance)
     );
-    this.create();
   }
 }
 
