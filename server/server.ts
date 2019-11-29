@@ -31,7 +31,7 @@ if (process.env.NODE_ENV == "development") {
 
   app.use(logger);
 }
-app.use(cors(["http://localhost:5000", "http://127.0.0.1:5000"]));
+app.use(cors(["http://localhost:1212", "http://127.0.0.1:1212"]));
 
 app.use(bodyParser());
 

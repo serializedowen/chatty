@@ -17,7 +17,9 @@ const assertNoConsoleErrors = async t => {
   await t.expect(error).eql([]);
 };
 
-fixture`Home Page`.page('../../app/app.html').afterEach(assertNoConsoleErrors);
+fixture`Home Page`
+  .page('../../app/renderer/app.html')
+  .afterEach(assertNoConsoleErrors);
 
 test('e2e', async t => {
   await t.expect(getPageTitle()).eql('Hello Electron React!');
@@ -52,7 +54,7 @@ test('should navgiate to /counter', async t => {
 });
 
 fixture`Counter Tests`
-  .page('../../app/app.html')
+  .page('../../app/renderer/app.html')
   .beforeEach(clickToCounterLink)
   .afterEach(assertNoConsoleErrors);
 
